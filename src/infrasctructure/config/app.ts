@@ -8,6 +8,7 @@ import projectLeadRoute from '../router/ProjectLeadRoute'
 import commonRoute from '../router/CommonRoutes'
 import session, { SessionOptions } from 'express-session';
 import errorHandleMiddleware from '../middlewares/errorHandling';
+import teamMemberRoute from '../router/TeamMemberRoutes'
 
 dotenv.config()
 export const app = express()
@@ -40,6 +41,7 @@ app.use(session(sessionOptions))
 
 
 app.use("/api/Project-Lead", projectLeadRoute)
+app.use("/api/Team-Member", teamMemberRoute)
 app.use("/api/Common-Routes", commonRoute)
 app.use(errorHandleMiddleware)
 

@@ -35,7 +35,7 @@ export default class ProjectLeadController {
                 await this.sendemails.sendOtpMail(email, name, otp)
                 res.status(httpStatus.OK).json({ message: 'otp have sented to email' })
             } else {
-                res.status(httpStatus.CONFLICT).json('email is already in use. try differnt email')
+                res.status(httpStatus.CONFLICT).json('email is already in use. try different email')
             }
         } catch (error) {
             next(error)
@@ -86,7 +86,7 @@ export default class ProjectLeadController {
                 const isPasswordMatch = await this.projectleadusecase.IsPasswordMatching(password, ProjectLeadData?.data.password)
                 if (isPasswordMatch) {
 
-                    // getting user dat from database //
+                    // getting user data from database //
 
                     const ProjectLeadData = await this.projectleadusecase.GetProjectLeadDetails(email);
                     if (ProjectLeadData?._id && ProjectLeadData.role) {
@@ -119,11 +119,10 @@ export default class ProjectLeadController {
                         res.status(httpStatus.BAD_REQUEST).json('invalid user data')
                     }
                 } else {
-
-                    res.status(httpStatus.UNAUTHORIZED).json('password is incorrect')
+                    res.status(httpStatus.CONFLICT).json('password is incorrect')
                 }
             } else {
-                res.status(httpStatus.NOT_FOUND).json("We couldn’t find an account with that email address. Please check the email and try again.")
+                res.status(httpStatus.CONFLICT).json("We couldn’t find an account with that email address. Please check the email and try again.")
             }
         } catch (error) {
             next(error)

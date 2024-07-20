@@ -7,7 +7,7 @@ export default function errorHandleMiddleware(err: any, req: Req, res: Res, next
     console.log(err, '--------------------from errorHandleMiddleware----------------------------');
 
     if (err.name === 'UnauthorizedError') {
-        res.status(httpStatus.UNAUTHORIZED).json('UNAUTHORIZED please login')
+        res.status(httpStatus.UNAUTHORIZED)
     }
 
     if (err.name === 'ValidationError') {
