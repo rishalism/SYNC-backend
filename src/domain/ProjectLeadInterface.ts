@@ -8,6 +8,7 @@ export interface ProjectLead {
     password?: string;
     role?: string;
     avatar?: string;
+    isGoogle: boolean;
     created_at?: Date;
     updated_at?: Date;
 }

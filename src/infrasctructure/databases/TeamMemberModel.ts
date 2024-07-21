@@ -28,6 +28,10 @@ const TeamMemberSchema: Schema = new Schema({
         type: String,
         default: ''
     },
+    isGoogle: {
+        type: Boolean,
+        required: true
+    },
     permissions: {
         dbDesign: { type: Number, enum: [accessLevel.view, accessLevel.edit], default: accessLevel.view },
         modules: { type: Number, enum: [accessLevel.view, accessLevel.edit], default: accessLevel.view },

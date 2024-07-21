@@ -25,6 +25,10 @@ const ProjectLeadSchema = new Schema<ProjectLead & Document>({
         type: String,
         required: true
     },
+    isGoogle: {
+        type: Boolean,
+        required: true
+    },
     avatar: {
         type: String,
         default: ''

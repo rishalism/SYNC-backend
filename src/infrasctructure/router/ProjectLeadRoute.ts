@@ -47,7 +47,8 @@ const route = express.Router()
 route.post('/signup', (req, res, next) => projectleadcontroller.Signup(req, res, next))
 route.post('/signup-verify', (req, res, next) => projectleadcontroller.verifyOtpAndSaveUser(req, res, next))
 route.post('/login', (req, res, next) => projectleadcontroller.Login(req, res, next))
-
+route.post('/auth/google-signin', (req, res, next) => projectleadcontroller.googleSignin(req, res, next))
+route.post('/auth/google-signup', (req, res, next) => projectleadcontroller.googleSignup(req, res, next))
 
 //projects//
 route.post('/projects', projectLeadAuth, (req, res, next) => projectcontroller.createProject(req, res, next))

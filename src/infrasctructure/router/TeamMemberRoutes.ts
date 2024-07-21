@@ -8,6 +8,7 @@ import sendEmail from '../services/sendEmail'
 import OtpRepository from '../repository/otpRepository'
 import Encrypt from '../services/encryption'
 import GenerateOtp from '../services/generateOtp'
+import TeaMemberAuth from '../middlewares/TeamMemberMiddleware'
 const route = express()
 const teammeberRepo = new TeamMemberRepository()
 const otpRepo = new OtpRepository()
@@ -23,9 +24,8 @@ const teammembercontroller = new TeamMemberController(teammeberusecase, otpuseca
 route.post('/signup', (req, res, next) => teammembercontroller.MemberSignup(req, res, next))
 route.post('/signup-verify', (req, res, next) => teammembercontroller.verifyOtpAndSaveMember(req, res, next))
 route.post('/login', (req, res, next) => teammembercontroller.Login(req, res, next))
-
-
-
+route.post('/auth/google/login', (req, res, next) => teammembercontroller.googleSignin(req, res, next))
+route.post('/auth/google/signup', (req, res, next) => teammembercontroller.googleSignup(req, res, next))
 
 
 

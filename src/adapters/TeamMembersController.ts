@@ -58,7 +58,6 @@ export default class TeamMemberController {
             const userdata = await this.otpusecase.compareOtp(email, otp)
             console.log(userdata);
             if (userdata) {
-                console.log(userdata, '---------------usedata-----------------');
                 // saving the projectMember info on database //
                 const teamMemberDetails: TeamMember = {
                     name: name,
@@ -66,6 +65,7 @@ export default class TeamMemberController {
                     userName: userdata.username,
                     password: userdata.password,
                     role: role,
+                    isGoogle: false,
                     permissions: {
                         board: accessLevel.view,
                         modules: accessLevel.view,
@@ -95,7 +95,7 @@ export default class TeamMemberController {
             if (TeamMemberData?.password) {
                 // check password matches //
                 const isPasswordCorrect = await this.teammemberUsecase.isPasswordMatching(password, TeamMemberData?.password)
-                if (isPasswordCorrect) {
+                if (isPasswordCorrect && TeamMemberData.isGoogle == false) {
                     // getting teaMember data from database //
 
                     const teamMemberData = await this.teammemberUsecase.getTeamMemberDetails(email)
@@ -121,7 +121,7 @@ export default class TeamMemberController {
                                 sameSite: process.env.NODE_ENV !== "development" ? "none" : "strict",
                             })
                         }
-                        
+
                         res.status(httpStatus.OK).json({
                             accesstoken,
                             data
@@ -130,11 +130,15 @@ export default class TeamMemberController {
                         res.status(httpStatus.BAD_REQUEST).json('invalid user data')
 
                     }
-                } else {
+                } else if (TeamMemberData?.isGoogle == true) {
+                    res.status(httpStatus.CONFLICT).json('Try a different sigIn Method')
+                }
+                else {
                     res.status(httpStatus.CONFLICT).json('password is incorrect')
 
                 }
-            } else {
+            }
+            else {
                 res.status(httpStatus.CONFLICT).json("We couldn’t find an account with that email address. Please check the email and try again.")
 
             }
@@ -143,5 +147,116 @@ export default class TeamMemberController {
 
         }
     }
+
+
+    async googleSignup(req: Req, res: Res, next: Next) {
+        try {
+            const { id: password, email: email, name: name, picture: avatar, role: role } = req.body
+            const userName = name.split(" ").slice(0, 1).toString()
+            const permissions = {
+                board: accessLevel.view,
+                modules: accessLevel.view,
+                dbDesign: accessLevel.view
+            }
+            const isGoogle = true
+            // check if email exist 
+
+            const isEmailExist = await this.teammemberUsecase.checkIfEmailExist(email)
+
+            if (!isEmailExist) {
+                // create a new team member
+                const userdata = await this.teammemberUsecase.saveTeamMember({ name, email, isGoogle, password, permissions, role, userName, avatar })
+                if (userdata?._id && userdata.role) {
+
+                    // sending jwt as response
+                    const accesstoken = await this.jwt.generateAccesToken(userdata?._id, userdata?.role);
+                    const refreshtoken = await this.jwt.generateRefreshToken(userdata?._id, userdata?.role);
+                    const data = {
+                        id: userdata._id,
+                        name: userdata.name,
+                        username: userdata.userName,
+                        email: userdata.email,
+                        role: userdata.role,
+                        avatar: userdata.avatar,
+                        permissions: userdata.permissions
+                    }
+                    if (refreshtoken) {
+                        res.cookie('refreshtoken', refreshtoken, {
+                            httpOnly: true,
+                            maxAge: REFRESH_TOKEM_MAX_AGE,
+                            secure: process.env.NODE_ENV !== "development",
+                            sameSite: process.env.NODE_ENV !== "development" ? "none" : "strict",
+                        })
+                    }
+
+                    res.status(httpStatus.OK).json({
+                        accesstoken,
+                        data
+                    })
+                } else {
+                    res.status(httpStatus.BAD_REQUEST).json('invalid user data .  try different sigup method')
+
+                }
+            } else {
+                res.status(httpStatus.CONFLICT).json('email is already in use. try different email')
+
+            }
+
+        } catch (error) {
+            next(error)
+
+        }
+    }
+
+
+
+    async googleSignin(req: Req, res: Res, next: Next) {
+        try {
+            const { id: password, email: email, name: name, picture: avatar, role: role } = req.body
+            // check if email exist
+
+            const isUser = await this.teammemberUsecase.checkIfEmailExist(email)
+
+            if (isUser?._id && isUser.isGoogle == true) {
+                if (isUser._id) {
+
+
+                    // sending jwt as response
+                    const accesstoken = await this.jwt.generateAccesToken(isUser?._id, isUser?.role);
+                    const refreshtoken = await this.jwt.generateRefreshToken(isUser?._id, isUser?.role);
+                    const data = {
+                        id: isUser._id,
+                        name: isUser.name,
+                        username: isUser.userName,
+                        email: isUser.email,
+                        role: isUser.role,
+                        avatar: isUser.avatar,
+                        permissions: isUser.permissions
+                    }
+                    if (refreshtoken) {
+                        res.cookie('refreshtoken', refreshtoken, {
+                            httpOnly: true,
+                            maxAge: REFRESH_TOKEM_MAX_AGE,
+                            secure: process.env.NODE_ENV !== "development",
+                            sameSite: process.env.NODE_ENV !== "development" ? "none" : "strict",
+                        })
+                    }
+
+                    res.status(httpStatus.OK).json({
+                        accesstoken,
+                        data
+                    })
+                } else {
+                    res.status(httpStatus.CONFLICT).json('try different signIn method')
+                }
+            } else {
+                res.status(httpStatus.CONFLICT).json("We couldn’t find an account with that email address. Please create a new account or try again with a different email.")
+
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+
 
 }

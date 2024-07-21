@@ -11,6 +11,7 @@ export interface TeamMember {
     password: string;
     role: string;
     avatar?: string;
+    isGoogle: boolean;
     permissions: {
         dbDesign: accessLevel;
         modules: accessLevel;
