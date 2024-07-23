@@ -29,21 +29,39 @@ export default class CommonController {
         }
     }
 
+
     async refreshAccestoken(req: Req, res: Res, next: Next) {
-        const refreshtoken = req.cookies.refreshtoken || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Njk4YTgzZmQ1ZGMyNmRkYTFkMTk0ZGMiLCJyb2xlIjoiUHJvamVjdC1MZWFkIiwiaWF0IjoxNzIxMjk1ODI4LCJleHAiOjE3MjE5MDA2Mjh9.9EG7yIjIE4hI51P2WEGaxfJkaQelp61oc3tQ6bs3ako'
+        const refreshtoken = req.cookies.refreshtoken;
+        console.log(req.cookies, '---------------refreshtoken---------------------');
         try {
             if (refreshtoken) {
-                const accestoken = this.jwt.createAccesTokenWithRefreshToken(refreshtoken)
+                const accestoken = this.jwt.createAccesTokenWithRefreshToken(refreshtoken);
                 if (accestoken) {
-                    res.status(httpStatus.OK).json({ accestoken })
+                    res.status(httpStatus.OK).json({ accestoken });
+                } else {
+                    res.status(httpStatus.UNAUTHORIZED).json( 'Invalid refresh token' );
                 }
             } else {
-                res.status(httpStatus.UNAUTHORIZED).json('UNAUTHORIZED access')
+                console.log('in case no refreshtoken');
+                res.status(httpStatus.REQUEST_TIMEOUT).json( 'Refresh token not provided' );
             }
         } catch (error) {
+            next(error);
+        }
+    }
+
+
+
+
+
+    async Logout(req: Req, res: Res, next: Next) {
+        try {
+            res.cookie('refreshtoken', '', { expires: new Date(0), httpOnly: true, path: '/' })
+            res.status(httpStatus.OK).json('logged out  succefully')
+        } catch (error) {
+            console.log(error);
             next(error)
         }
-
     }
 
 

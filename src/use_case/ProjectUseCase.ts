@@ -19,7 +19,7 @@ export default class ProjectUseCase {
     }
 
 
-    async getAllProjects(ownerId : string) {
+    async getAllProjects(ownerId: string) {
         return await this.projectrepo.getprojects(ownerId)
     }
 
@@ -28,5 +28,14 @@ export default class ProjectUseCase {
         return await this.projectrepo.IsProjectNameExist(ownerId, projectname)
     }
 
+
+
+    async DeleteProject(projectId: string) {
+        return await this.projectrepo.deleteProject(projectId)
+    }
+
+    async editProject(projectId: string, projectData: Project) {
+        return await this.projectrepo.editProject(projectId, projectData)
+    }
 
 }

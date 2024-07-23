@@ -3,15 +3,17 @@ import { Next, Req, Res } from "../types/expressTypes";
 
 
 
-export default function errorHandleMiddleware(err: any, req: Req, res: Res, next: Next,) {
+export default function errorHandleMiddleware(err: any, req: Req, res: Res, next: Next) {
     console.log(err, '--------------------from errorHandleMiddleware----------------------------');
 
-    if (err.name === 'UnauthorizedError') {
-        res.status(httpStatus.UNAUTHORIZED)
+    switch (err.name) {
+        case 'UnauthorizedError':
+            return res.status(httpStatus.UNAUTHORIZED).json('Unauthorized access');
+        case 'ValidationError':
+            return res.status(httpStatus.BAD_REQUEST).json('Validation error');
+        case 'TokenExpiredError':
+            return res.status(httpStatus.UNAUTHORIZED).json('Token has expired');
+        default:
+            return res.status(httpStatus.INTERNAL_SERVER_ERROR).json('Internal server error');
     }
-
-    if (err.name === 'ValidationError') {
-        res.status(httpStatus.BAD_REQUEST).json('validation errror')
-    }
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).json('internal server error')
 }

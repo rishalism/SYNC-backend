@@ -40,12 +40,44 @@ export default class ProjectController {
 
     async getProjects(req: Req | any, res: Res, next: Next) {
         try {
-            const ownerId  = req.user
+            const ownerId = req.user
+            console.log(ownerId, '=====================ownerId================================');
+
             const projects = await this.projectusecase.getAllProjects(ownerId)
             if (projects) {
                 res.status(httpStatus.OK).json({ projectData: projects })
             } else {
                 res.status(httpStatus.NOT_FOUND).json('did not found ')
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async deleteProject(req: Req, res: Res, next: Next) {
+        try {
+            const projectId = req.params.projectId
+            console.log(projectId);
+            const deleted = await this.projectusecase.DeleteProject(projectId)
+            console.log(deleted);
+            if (deleted) {
+                res.status(httpStatus.OK).json('project has been deleted')
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async editProject(req: Req, res: Res, next: Next) {
+        try {
+            const { projectName, description, projectOwner } = req.body
+            const projectId = req.params.projectId
+            const editProject = await this.projectusecase.editProject(projectId, { projectName, description, projectOwner })
+            console.log(editProject);
+            if (editProject) {
+                res.status(httpStatus.OK).json('project has been edited')
             }
         } catch (error) {
             next(error)

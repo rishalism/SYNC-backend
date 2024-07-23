@@ -18,7 +18,7 @@ const TeaMemberAuth = async (req: Req, res: Res, next: Next) => {
             res.status(httpStatus.UNAUTHORIZED).json('UNAUTHORIZED acccess')
         }
     } catch (error) {
-        res.status(httpStatus.UNAUTHORIZED).json('UNAUTHORIZED acccess')
+        next(error)
 
     }
 }

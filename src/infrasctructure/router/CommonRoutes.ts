@@ -29,5 +29,6 @@ const commoncontroller = new CommonController(
 
 route.put('/resend', (req, res, next) => commoncontroller.resendOtp(req, res, next))
 route.post('/refreshtoken', (req, res, next) => commoncontroller.refreshAccestoken(req, res, next))
+// route.post('/logout', (req, res, next) => commoncontroller.Logout(req, res, next))
 
 export default route

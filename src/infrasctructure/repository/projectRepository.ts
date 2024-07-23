@@ -23,4 +23,22 @@ export default class projectRepository {
         return await ProjectModel.findOne({ projectOwner: ownerId, projectName: projectname })
     }
 
+
+    async deleteProject(projectid: string) {
+
+        return await ProjectModel.findByIdAndDelete(projectid)
+    }
+
+    async editProject(projectId: string, projectdata: Project) {
+        return await ProjectModel.findByIdAndUpdate(
+            projectId,
+            {
+                projectName: projectdata.projectName,
+                projectOwner: projectdata.projectOwner,
+                description: projectdata.description
+            },
+            { new: true }
+        );
+    }
+
 }

@@ -1,6 +1,6 @@
 import { ProjectLead } from "../domain/ProjectLeadInterface";
 import { httpStatus } from "../infrasctructure/constants/httpStatus";
-import { REFRESH_TOKEM_MAX_AGE } from "../infrasctructure/constants/jwt";
+import { REFRESH_TOKEN_MAX_AGE } from "../infrasctructure/constants/jwt";
 import GenerateOtp from "../infrasctructure/services/generateOtp";
 import Jwt from "../infrasctructure/services/jwt";
 import sendEmail from "../infrasctructure/services/sendEmail";
@@ -102,7 +102,7 @@ export default class ProjectLeadController {
                         if (refreshtoken) {
                             res.cookie('refreshtoken', refreshtoken, {
                                 httpOnly: true,
-                                maxAge: REFRESH_TOKEM_MAX_AGE,
+                                maxAge: REFRESH_TOKEN_MAX_AGE,
                                 secure: process.env.NODE_ENV !== "development",
                                 sameSite: process.env.NODE_ENV !== "development" ? "none" : "strict",
                             })
@@ -153,11 +153,10 @@ export default class ProjectLeadController {
                         role: userdata.role,
                         avatar: userdata.avatar
                     }
-
                     if (refreshtoken) {
                         res.cookie('refreshtoken', refreshtoken, {
                             httpOnly: true,
-                            maxAge: REFRESH_TOKEM_MAX_AGE,
+                            maxAge: REFRESH_TOKEN_MAX_AGE,
                             secure: process.env.NODE_ENV !== "development",
                             sameSite: process.env.NODE_ENV !== "development" ? "none" : "strict",
                         })
@@ -180,6 +179,7 @@ export default class ProjectLeadController {
         }
     }
 
+    
     async googleSignin(req: Req, res: Res, next: Next) {
         try {
             const { id: password, email: email, name: name, picture: avatar, role: role } = req.body
@@ -203,7 +203,7 @@ export default class ProjectLeadController {
                     if (refreshtoken) {
                         res.cookie('refreshtoken', refreshtoken, {
                             httpOnly: true,
-                            maxAge: REFRESH_TOKEM_MAX_AGE,
+                            maxAge: REFRESH_TOKEN_MAX_AGE,
                             secure: process.env.NODE_ENV !== "development",
                             sameSite: process.env.NODE_ENV !== "development" ? "none" : "strict",
                         })

@@ -1,6 +1,6 @@
 import { accessLevel, TeamMember } from "../domain/TeamMemberInterface";
 import { httpStatus } from "../infrasctructure/constants/httpStatus";
-import { REFRESH_TOKEM_MAX_AGE } from "../infrasctructure/constants/jwt";
+import { REFRESH_TOKEN_MAX_AGE } from "../infrasctructure/constants/jwt";
 import GenerateOtp from "../infrasctructure/services/generateOtp";
 import Jwt from "../infrasctructure/services/jwt";
 import sendEmail from "../infrasctructure/services/sendEmail";
@@ -116,7 +116,7 @@ export default class TeamMemberController {
                         if (refreshtoken) {
                             res.cookie('refreshtoken', refreshtoken, {
                                 httpOnly: true,
-                                maxAge: REFRESH_TOKEM_MAX_AGE,
+                                maxAge: REFRESH_TOKEN_MAX_AGE,
                                 secure: process.env.NODE_ENV !== "development",
                                 sameSite: process.env.NODE_ENV !== "development" ? "none" : "strict",
                             })
@@ -183,7 +183,7 @@ export default class TeamMemberController {
                     if (refreshtoken) {
                         res.cookie('refreshtoken', refreshtoken, {
                             httpOnly: true,
-                            maxAge: REFRESH_TOKEM_MAX_AGE,
+                            maxAge: REFRESH_TOKEN_MAX_AGE,
                             secure: process.env.NODE_ENV !== "development",
                             sameSite: process.env.NODE_ENV !== "development" ? "none" : "strict",
                         })
@@ -217,9 +217,8 @@ export default class TeamMemberController {
 
             const isUser = await this.teammemberUsecase.checkIfEmailExist(email)
 
-            if (isUser?._id && isUser.isGoogle == true) {
+            if (isUser?._id) {
                 if (isUser._id) {
-
 
                     // sending jwt as response
                     const accesstoken = await this.jwt.generateAccesToken(isUser?._id, isUser?.role);
@@ -236,7 +235,7 @@ export default class TeamMemberController {
                     if (refreshtoken) {
                         res.cookie('refreshtoken', refreshtoken, {
                             httpOnly: true,
-                            maxAge: REFRESH_TOKEM_MAX_AGE,
+                            maxAge: REFRESH_TOKEN_MAX_AGE,
                             secure: process.env.NODE_ENV !== "development",
                             sameSite: process.env.NODE_ENV !== "development" ? "none" : "strict",
                         })
