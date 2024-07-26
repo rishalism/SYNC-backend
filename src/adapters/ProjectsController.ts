@@ -18,13 +18,14 @@ export default class ProjectController {
             console.log(req.cookies, '---------------------------from projectcontroller--------------------------------');
 
             const { projectName, description, projectOwner } = req.body;
+            const isDeleted = false
             //check project name is already exists ?//
 
             const isProjectExist = await this.projectusecase.checkIsTheProjectExist(projectOwner, projectName)
             if (isProjectExist) {
                 res.status(httpStatus.CONFLICT).json("A project with this name already exists.")
             } else {
-                const newProject = await this.projectusecase.newProject({ projectName, description, projectOwner })
+                const newProject = await this.projectusecase.newProject({ projectName, description, projectOwner, isDeleted })
                 if (newProject) {
                     res.status(httpStatus.CREATED).json('project created')
                 } else {
@@ -74,7 +75,8 @@ export default class ProjectController {
         try {
             const { projectName, description, projectOwner } = req.body
             const projectId = req.params.projectId
-            const editProject = await this.projectusecase.editProject(projectId, { projectName, description, projectOwner })
+            const isDeleted = false
+            const editProject = await this.projectusecase.editProject(projectId, { projectName, description, projectOwner, isDeleted })
             console.log(editProject);
             if (editProject) {
                 res.status(httpStatus.OK).json('project has been edited')
@@ -83,6 +85,9 @@ export default class ProjectController {
             next(error)
         }
     }
+
+
+
 
 
 }

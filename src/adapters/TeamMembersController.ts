@@ -1,6 +1,6 @@
 import { accessLevel, TeamMember } from "../domain/TeamMemberInterface";
 import { httpStatus } from "../infrasctructure/constants/httpStatus";
-import { REFRESH_TOKEN_MAX_AGE } from "../infrasctructure/constants/jwt";
+import { OTP_TIMER, REFRESH_TOKEN_MAX_AGE } from "../infrasctructure/constants/jwt";
 import GenerateOtp from "../infrasctructure/services/generateOtp";
 import Jwt from "../infrasctructure/services/jwt";
 import sendEmail from "../infrasctructure/services/sendEmail";
@@ -35,6 +35,15 @@ export default class TeamMemberController {
                 await this.sendmails.sendOtpMail(email, name, otp)
                 //save otp in database
                 await this.otpusecase.saveotp({ otp, email, password, username })
+
+                setTimeout(async () => {
+                    const data = await this.otpusecase.removeOtp(email)
+                    if (data) {
+                        console.log('otp expired');
+                    }
+                }, OTP_TIMER);
+
+
                 res.status(httpStatus.OK).json({ message: 'otp have sented to email' })
             } else {
                 res.status(httpStatus.CONFLICT).json('email is already in use . try different email ')
@@ -80,6 +89,11 @@ export default class TeamMemberController {
                 } else {
                     res.status(httpStatus.CONFLICT).json('failed to save member in database')
                 }
+            } else if (userdata == false) {
+                res.status(httpStatus.CONFLICT).json('OTP expired . try resending OTP')
+            } else {
+                res.status(httpStatus.CONFLICT).json('invalid OTP please try again')
+
             }
         } catch (error) {
             next(error)

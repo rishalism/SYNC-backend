@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { Otp } from "../../domain/OtpInterface";
+import { OTP_TIMER } from "../constants/jwt";
 
 
 const otpschema: Schema = new Schema({
@@ -20,6 +21,11 @@ const otpschema: Schema = new Schema({
     otp: {
         type: String,
         required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        expires: OTP_TIMER
     }
 })
 

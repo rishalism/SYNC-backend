@@ -12,7 +12,7 @@ export default class projectRepository {
 
 
     async getprojects(ownerId: string) {
-        const projects = await ProjectModel.find({ projectOwner: ownerId })
+        const projects = await ProjectModel.find({ projectOwner: ownerId, isDeleted: false })
         if (projects) {
             return projects
         }
@@ -26,7 +26,7 @@ export default class projectRepository {
 
     async deleteProject(projectid: string) {
 
-        return await ProjectModel.findByIdAndDelete(projectid)
+        return await ProjectModel.findByIdAndUpdate(projectid, { isDeleted: true })
     }
 
     async editProject(projectId: string, projectdata: Project) {
@@ -35,7 +35,8 @@ export default class projectRepository {
             {
                 projectName: projectdata.projectName,
                 projectOwner: projectdata.projectOwner,
-                description: projectdata.description
+                description: projectdata.description,
+                isDeleted: projectdata.isDeleted
             },
             { new: true }
         );

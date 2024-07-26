@@ -1,6 +1,7 @@
 import { ProjectLead } from "../domain/ProjectLeadInterface";
 import { httpStatus } from "../infrasctructure/constants/httpStatus";
-import { REFRESH_TOKEN_MAX_AGE } from "../infrasctructure/constants/jwt";
+import { OTP_TIMER, REFRESH_TOKEN_MAX_AGE } from "../infrasctructure/constants/jwt";
+import GenerateLink from "../infrasctructure/services/generateLink";
 import GenerateOtp from "../infrasctructure/services/generateOtp";
 import Jwt from "../infrasctructure/services/jwt";
 import sendEmail from "../infrasctructure/services/sendEmail";
@@ -15,7 +16,8 @@ export default class ProjectLeadController {
         private projectleadusecase: ProjectLeadUseCase,
         private sendemails: sendEmail,
         private otpusecase: OtpUseCase,
-        private jwt: Jwt
+        private jwt: Jwt,
+        private generateurl: GenerateLink
     ) { }
 
 
@@ -31,6 +33,14 @@ export default class ProjectLeadController {
                 // save otp in db
                 await this.otpusecase.saveotp({ otp, email, password, username })
                 await this.sendemails.sendOtpMail(email, name, otp)
+
+                setTimeout(async () => {
+                    const data = await this.otpusecase.removeOtp(email)
+                    if (data) {
+                        console.log('otp expired');
+                    }
+                }, OTP_TIMER);
+
                 res.status(httpStatus.OK).json({ message: 'otp have sented to email' })
             } else {
                 res.status(httpStatus.CONFLICT).json('email is already in use. try different email')
@@ -49,7 +59,6 @@ export default class ProjectLeadController {
             const userdata = await this.otpusecase.compareOtp(email, otp)
 
             if (userdata) {
-
                 // saving the userinfo in database //
                 const projectLeadDetails: ProjectLead = {
                     name: name,
@@ -62,10 +71,12 @@ export default class ProjectLeadController {
                 await this.projectleadusecase.saveProjectLead(projectLeadDetails)
                 // after saving user detail removing otp //
                 await this.otpusecase.removeOtp(email)
-
                 res.status(httpStatus.OK).json('user created successfully')
+            } else if (userdata == false) {
+                res.status(httpStatus.CONFLICT).json('OTP expired . try resending OTP')
             } else {
                 res.status(httpStatus.CONFLICT).json('invalid OTP please try again')
+
             }
         } catch (error) {
             next(error)
@@ -179,7 +190,7 @@ export default class ProjectLeadController {
         }
     }
 
-    
+
     async googleSignin(req: Req, res: Res, next: Next) {
         try {
             const { id: password, email: email, name: name, picture: avatar, role: role } = req.body
@@ -224,6 +235,20 @@ export default class ProjectLeadController {
             next(error)
         }
     }
+
+
+
+    async inviteMember(req: Req, res: Res, next: Next) {
+        try {
+            const { projectId, email, projectOwner } = req.body
+            const url = await this.generateurl.genereteUniqueLink(projectId, projectOwner)
+            await this.sendemails.sendInvitationMail(email, projectOwner, url)
+            res.status(httpStatus.OK).json("Invitation sent successfully")
+        } catch (error) {
+            next(error)
+        }
+    }
+
 
 
 }

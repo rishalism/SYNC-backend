@@ -20,6 +20,10 @@ const projectSchema = new Schema<Project & Document>({
         type: [Schema.Types.ObjectId],
         ref: 'TeamMember',
     },
+    isDeleted: {
+        type: Boolean,
+        required: true
+    }
 }, {
     timestamps: true,
 });

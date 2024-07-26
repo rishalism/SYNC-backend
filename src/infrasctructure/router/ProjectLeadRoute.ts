@@ -9,6 +9,9 @@ import ProjectLeadRepository from '../repository/projectLeadRespository'
 import sendEmail from '../services/sendEmail'
 import OtpRepository from '../repository/otpRepository'
 import Jwt from '../services/jwt'
+import projectLeadAuth from '../middlewares/ProjectLeadAuth'
+import GenerateLink from '../services/generateLink'
+import InviteMembersRepository from '../repository/inviteMembersRepository'
 
 
 // creating instances  and injecting dependencies :>
@@ -18,7 +21,8 @@ const generateOtp = new GenerateOtp()
 const encrypt = new Encrypt()
 const otpRepo = new OtpRepository()
 const jwt = new Jwt()
-
+const inviteRepo = new InviteMembersRepository()
+const generateurl = new GenerateLink(inviteRepo, encrypt)
 /////////////// project-controller ///////////////////////// 
 
 const otpusecase = new OtpUseCase(encrypt, otpRepo)
@@ -28,7 +32,8 @@ const projectleadcontroller = new ProjectLeadController(
     projectleadusecase,
     sendemails,
     otpusecase,
-    jwt
+    jwt,
+    generateurl
 )
 
 
@@ -40,6 +45,7 @@ route.post('/signup-verify', (req, res, next) => projectleadcontroller.verifyOtp
 route.post('/login', (req, res, next) => projectleadcontroller.Login(req, res, next))
 route.post('/auth/google-signin', (req, res, next) => projectleadcontroller.googleSignin(req, res, next))
 route.post('/auth/google-signup', (req, res, next) => projectleadcontroller.googleSignup(req, res, next))
+route.post('/invite-member', projectLeadAuth, (req, res, next) => projectleadcontroller.inviteMember(req, res, next))
 
 
 

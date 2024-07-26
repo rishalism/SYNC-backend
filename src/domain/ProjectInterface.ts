@@ -9,6 +9,7 @@ export interface Project {
     projectOwner: ObjectId;
     description: string;
     ProjectMembers?: ObjectId[];
+    isDeleted: boolean;
     createdAt?: Date;
     updatedAt?: Date
 }

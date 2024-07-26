@@ -21,6 +21,9 @@ export default class OtpUseCase {
 
     async compareOtp(email: string, otp: string): Promise<any> {
         const otpDAta = await this.otpRepo.getOtp(email);
+        if (!otpDAta) {
+            return false
+        }
         const isvalid = await this.encrypt.compare(otp, otpDAta?.otp)
         if (isvalid) {
             return otpDAta
@@ -31,7 +34,7 @@ export default class OtpUseCase {
 
 
     async removeOtp(email: string) {
-        await this.otpRepo.clearOtp(email)
+        return await this.otpRepo.clearOtp(email)
     }
 
     async resendOtp(email: string, otp: string) {

@@ -26,7 +26,7 @@ export default class OtpRepository {
 
 
     async clearOtp(email: string) {
-        await OtpModel.findOneAndDelete({ email: email })
+      return  await OtpModel.findOneAndDelete({ email: email })
     }
 
     async updateOtp(email: string, otp: string) {

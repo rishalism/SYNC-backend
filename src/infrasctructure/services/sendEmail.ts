@@ -79,4 +79,39 @@ The Sync Team`,
         const content = this.generateMailTemplate(email);
         this.sendEmail(emailID, subject, content);
     }
+
+
+    sendInvitationMail(emailId: string, projectOwner: string, url: string) {
+        const subject = "You're Invited to a Project on SYNC!";
+        const email = {
+            body: {
+                name: emailId,
+                intro: `You've been invited to join the project`,
+                instructions: "Click the button below to accept the invitation and get started.",
+                action: {
+                    instructions: `Hey ${emailId},
+        
+        You've been invited to join the project  by the project owner  ${projectOwner}.
+        
+        We're excited to have you on board! Click the button below to join the project and start collaborating.
+        
+        If this wasn't expected, you can ignore this email.
+        
+        Thanks,
+        The Sync Team`,
+                    button: {
+                        color: "#007BFF", // A friendly, inviting color
+                        text: "Join Project",
+                        link: url // Ensure this is a valid link
+                    }
+                },
+                outro: "Looking forward to working with you!",
+            }
+        };
+
+        const content = this.generateMailTemplate(email);
+        this.sendEmail(emailId, subject, content);
+    }
+
+
 }
