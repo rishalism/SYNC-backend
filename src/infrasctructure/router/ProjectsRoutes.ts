@@ -4,6 +4,7 @@ import ProjectController from '../../adapters/ProjectsController'
 import ProjectUseCase from '../../use_case/ProjectUseCase'
 import projectRepository from '../repository/projectRepository'
 import projectLeadAuth from '../middlewares/ProjectLeadAuth'
+import TeaMemberAuth from '../middlewares/TeamMemberMiddleware'
 
 
 const projectrepo = new projectRepository()
@@ -18,7 +19,8 @@ route.post('/', projectLeadAuth, (req, res, next) => projectcontroller.createPro
 route.get('/', projectLeadAuth, (req, res, next) => projectcontroller.getProjects(req, res, next))
 route.delete('/:projectId', projectLeadAuth, (req, res, next) => projectcontroller.deleteProject(req, res, next))
 route.put('/:projectId', projectLeadAuth, (req, res, next) => projectcontroller.editProject(req, res, next))
-
+route.post('/add-member', TeaMemberAuth, (req, res, next) => projectcontroller.addMember(req, res, next))
+route.post('/remove', projectLeadAuth, (req, res, next) => projectcontroller.removeMember(req, res, next))
 
 
 

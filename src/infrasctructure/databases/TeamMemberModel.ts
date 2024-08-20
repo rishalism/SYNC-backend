@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { accessLevel, TeamMember } from "../../domain/TeamMemberInterface";
+import { accessLevel, isBlocked, TeamMember } from "../../domain/TeamMemberInterface";
 
 const TeamMemberSchema: Schema = new Schema({
     name: {

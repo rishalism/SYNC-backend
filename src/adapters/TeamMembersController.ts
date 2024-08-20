@@ -5,6 +5,7 @@ import GenerateOtp from "../infrasctructure/services/generateOtp";
 import Jwt from "../infrasctructure/services/jwt";
 import sendEmail from "../infrasctructure/services/sendEmail";
 import { Next, Req, Res } from "../infrasctructure/types/expressTypes";
+import InvitationUsecase from "../use_case/InvitationUsecase";
 import OtpUseCase from "../use_case/otpUsecase";
 import TeamMemberUsecase from "../use_case/teamMemberUsecase";
 
@@ -15,7 +16,8 @@ export default class TeamMemberController {
         private otpusecase: OtpUseCase,
         private sendmails: sendEmail,
         private jwt: Jwt,
-        private generateOtp: GenerateOtp
+        private generateOtp: GenerateOtp,
+        private invitationusecase: InvitationUsecase
     ) { }
 
 
@@ -32,6 +34,7 @@ export default class TeamMemberController {
                 // generate otp 
                 const otp = await this.generateOtp.generateOtp()
                 //send otp to mail 
+                console.log(otp);
                 await this.sendmails.sendOtpMail(email, name, otp)
                 //save otp in database
                 await this.otpusecase.saveotp({ otp, email, password, username })
@@ -270,6 +273,37 @@ export default class TeamMemberController {
             next(error)
         }
     }
+
+
+
+
+
+
+    async acceptInvitation(req: Req, res: Res, next: Next) {
+        try {
+            const { token, projectId } = req.body
+            const ifTokenisValid = await this.invitationusecase.findInvitationToken(projectId)
+            // chekc the token matches
+            if (ifTokenisValid) {
+                const ifTokenMatches = await this.invitationusecase.checkTheTokenMatches(token, ifTokenisValid.token)
+                if (ifTokenMatches) {
+                    res.status(httpStatus.ACCEPTED).json('token matches')
+                    /// remove token 
+                    const removed = await this.invitationusecase.DeleteToken(ifTokenisValid.token)
+                } else {
+                    res.status(httpStatus.CONFLICT).json('token doesnt match')
+                }
+
+            } else {
+                res.status(httpStatus.BAD_REQUEST).json('this link has been expired')
+            }
+
+        } catch (error) {
+            next(error)
+        }
+
+    }
+
 
 
 }

@@ -10,6 +10,9 @@ import session, { SessionOptions } from 'express-session';
 import errorHandleMiddleware from '../middlewares/errorHandling';
 import teamMemberRoute from '../router/TeamMemberRoutes'
 import ProjectRoutes from '../router/ProjectsRoutes';
+import ApiToolRoutes from '../router/ApiToolRoutes';
+import CardRoutes from '../router/CardRouter'
+import NotePadRoutes from '../router/NotePadRouter'
 
 dotenv.config()
 export const app = express()
@@ -45,5 +48,8 @@ app.use("/api/Project-Lead", projectLeadRoute)
 app.use("/api/Team-Member", teamMemberRoute)
 app.use("/api/Common-Routes", commonRoute)
 app.use('/api/v1/projects', ProjectRoutes)
+app.use('/api/v2/api-testing', ApiToolRoutes)
+app.use('/api/v3/cards', CardRoutes)
+app.use('/api/notePad', NotePadRoutes)
 app.use(errorHandleMiddleware)
 

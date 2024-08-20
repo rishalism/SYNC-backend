@@ -12,7 +12,10 @@ const TeaMemberAuth = async (req: Req, res: Res, next: Next) => {
                 accestoken,
                 process.env.ACCES_TOKEN_SECRET as string
             ) as JwtPayload
-            (req as any).user = decoded.userId
+
+            (req as any).user = decoded.userId;
+            (req as any).role = decoded.role;
+
             next()
         } else {
             res.status(httpStatus.UNAUTHORIZED).json('UNAUTHORIZED acccess')

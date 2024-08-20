@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { Project } from "../domain/ProjectInterface";
 import projectRepository from "../infrasctructure/repository/projectRepository";
 
@@ -19,8 +20,13 @@ export default class ProjectUseCase {
     }
 
 
-    async getAllProjects(ownerId: string) {
-        return await this.projectrepo.getprojects(ownerId)
+
+    async getAllProjects(memberId: string) {
+        return await this.projectrepo.getprojects(memberId)
+    }
+
+    async getALLProjectsOfTeamMember(ownerId: string) {
+        return await this.projectrepo.getTeamMemberProjects(ownerId)
     }
 
 
@@ -29,6 +35,9 @@ export default class ProjectUseCase {
     }
 
 
+    async checktheMemberExist(projectId: string, memberId: ObjectId) {
+        return await this.projectrepo.isMemberIsAlreadyExist(projectId, memberId)
+    }
 
     async DeleteProject(projectId: string) {
         return await this.projectrepo.deleteProject(projectId)
@@ -37,5 +46,14 @@ export default class ProjectUseCase {
     async editProject(projectId: string, projectData: Project) {
         return await this.projectrepo.editProject(projectId, projectData)
     }
+
+    async addMember(projectId: string, memberId: ObjectId) {
+        return await this.projectrepo.addMemberToProject(projectId, memberId)
+    }
+
+    async removeMemberFromProject(projectId: string, memberId: ObjectId) {
+        return await this.projectrepo.removeMemberFromProject(projectId, memberId)
+    }
+
 
 }

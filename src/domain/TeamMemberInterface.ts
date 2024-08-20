@@ -3,6 +3,12 @@ export enum accessLevel {
     edit = 2
 }
 
+
+export enum isBlocked {
+    not_bloked = 0,
+    is_bloked = 1
+}
+
 export interface TeamMember {
     _id?: string;
     name: string;

@@ -14,7 +14,7 @@ const projectSchema = new Schema<Project & Document>({
     projectOwner: {
         type: Schema.Types.ObjectId,
         required: true,
-        ref: 'User',
+        ref: 'ProjectLead',
     },
     ProjectMembers: {
         type: [Schema.Types.ObjectId],

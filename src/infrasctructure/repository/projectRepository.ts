@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { Project } from "../../domain/ProjectInterface";
 import ProjectModel from "../databases/ProjectModal";
 
@@ -12,15 +13,21 @@ export default class projectRepository {
 
 
     async getprojects(ownerId: string) {
-        const projects = await ProjectModel.find({ projectOwner: ownerId, isDeleted: false })
+        const projects = await ProjectModel.find({ projectOwner: ownerId, isDeleted: false }).populate('projectOwner').populate('ProjectMembers')
         if (projects) {
             return projects
         }
     }
 
+    async getTeamMemberProjects(memberId: string) {
+        const projects = await ProjectModel.find({ ProjectMembers: memberId, isDeleted: false }).populate('projectOwner').populate('ProjectMembers')
+        if (projects) {
+            return projects
+        }
+    }
 
     async IsProjectNameExist(projectname: string, ownerId: string): Promise<Project | null> {
-        return await ProjectModel.findOne({ projectOwner: ownerId, projectName: projectname })
+        return await ProjectModel.findOne({ projectOwner: ownerId, projectName: projectname, isDeleted: false })
     }
 
 
@@ -41,5 +48,32 @@ export default class projectRepository {
             { new: true }
         );
     }
+
+
+
+    async isMemberIsAlreadyExist(projectId: string, memberId: ObjectId) {
+        const projectData = await ProjectModel.findById(projectId)
+        return projectData?.ProjectMembers?.includes(memberId)
+    }
+
+
+
+    async addMemberToProject(projectId: string, memberId: ObjectId) {
+        const added = await ProjectModel.findByIdAndUpdate(projectId, {
+            $push: { ProjectMembers: memberId }
+        }, { new: true })
+        return added
+    }
+
+
+    async removeMemberFromProject(projecId: string, memberId: ObjectId) {
+        const removed = await ProjectModel.findByIdAndUpdate(projecId, {
+            $pull: { ProjectMembers: memberId }
+        }, { new: true })
+        return removed
+    }
+
+
+
 
 }

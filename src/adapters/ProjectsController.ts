@@ -1,4 +1,5 @@
 import { httpStatus } from "../infrasctructure/constants/httpStatus";
+import { Role } from "../infrasctructure/constants/role";
 import { Next, Req, Res } from "../infrasctructure/types/expressTypes";
 import ProjectUseCase from "../use_case/ProjectUseCase";
 
@@ -14,8 +15,6 @@ export default class ProjectController {
 
     async createProject(req: Req, res: Res, next: Next) {
         try {
-
-            console.log(req.cookies, '---------------------------from projectcontroller--------------------------------');
 
             const { projectName, description, projectOwner } = req.body;
             const isDeleted = false
@@ -42,18 +41,29 @@ export default class ProjectController {
     async getProjects(req: Req | any, res: Res, next: Next) {
         try {
             const ownerId = req.user
-            console.log(ownerId, '=====================ownerId================================');
-
-            const projects = await this.projectusecase.getAllProjects(ownerId)
-            if (projects) {
-                res.status(httpStatus.OK).json({ projectData: projects })
-            } else {
-                res.status(httpStatus.NOT_FOUND).json('did not found ')
+            const role = req.role
+            if (role == Role.projectlead) {
+                const projects = await this.projectusecase.getAllProjects(ownerId)
+                if (projects) {
+                    res.status(httpStatus.OK).json({ projectData: projects })
+                } else {
+                    res.status(httpStatus.NOT_FOUND).json('did not found ')
+                }
+            } else if (role == Role.teammember) {
+                const projects = await this.projectusecase.getALLProjectsOfTeamMember(ownerId)
+                if (projects) {
+                    res.status(httpStatus.OK).json({ projectData: projects })
+                } else {
+                    res.status(httpStatus.NOT_FOUND).json('did not found ')
+                }
             }
+
         } catch (error) {
             next(error)
         }
     }
+
+
 
 
     async deleteProject(req: Req, res: Res, next: Next) {
@@ -76,10 +86,15 @@ export default class ProjectController {
             const { projectName, description, projectOwner } = req.body
             const projectId = req.params.projectId
             const isDeleted = false
-            const editProject = await this.projectusecase.editProject(projectId, { projectName, description, projectOwner, isDeleted })
-            console.log(editProject);
-            if (editProject) {
-                res.status(httpStatus.OK).json('project has been edited')
+            const isProjectExist = await this.projectusecase.checkIsTheProjectExist(projectOwner, projectName)
+            if (isProjectExist) {
+                res.status(httpStatus.CONFLICT).json("A project with this name already exists.")
+
+            } else {
+                const editProject = await this.projectusecase.editProject(projectId, { projectName, description, projectOwner, isDeleted })
+                if (editProject) {
+                    res.status(httpStatus.OK).json('project has been edited')
+                }
             }
         } catch (error) {
             next(error)
@@ -87,6 +102,39 @@ export default class ProjectController {
     }
 
 
+    async addMember(req: Req, res: Res, next: Next) {
+        try {
+            const { memberId, projectId } = req.body
+            // check the member is already exist in the project
+            const isMemberExist = await this.projectusecase.checktheMemberExist(projectId, memberId)
+            if (isMemberExist) {
+                res.status(httpStatus.OK).json('you are already in this project')
+            } else {
+                /// add to project 
+                const addMember = await this.projectusecase.addMember(projectId, memberId)
+                if (addMember) {
+
+                    res.status(httpStatus.OK).json('welcome to the project')
+                }
+            }
+
+        } catch (error) {
+
+        }
+    }
+
+    async removeMember(req: Req, res: Res, next: Next) {
+        try {
+            const { userId, projectId } = req.body
+            const removedUser = await this.projectusecase.removeMemberFromProject(projectId, userId)
+            if (removedUser) {
+                console.log(removedUser);
+                res.status(httpStatus.OK)
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
 
 
 

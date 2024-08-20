@@ -15,7 +15,7 @@ export default class GenerateLink {
     async genereteUniqueLink(projectId: ObjectId, projectOwner: string) {
         const key = uuidv4()
         const baseUrl = process.env.CORS_URL;
-        const url = `${baseUrl}/api/v1/links/?token=${key}`
+        const url = `${baseUrl}/api/v1/links/?token=${key}&projectId=${projectId}`
         const token: string = await this.encrypt.hashpassord(key)
         await this.inviteRepo.saveInviteToken({ token, projectId, projectOwner })
         return url
