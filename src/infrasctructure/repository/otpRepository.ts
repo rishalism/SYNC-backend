@@ -1,5 +1,7 @@
 
+import { ResetPasswordOtpInterface } from "../../domain/ResetPasswordOtp";
 import OtpModel from "../databases/OtpModel";
+import ResetPasswordOtpModal from "../databases/ResetPasswordOtp";
 
 
 export default class OtpRepository {
@@ -26,11 +28,27 @@ export default class OtpRepository {
 
 
     async clearOtp(email: string) {
-      return  await OtpModel.findOneAndDelete({ email: email })
+        return await OtpModel.findOneAndDelete({ email: email })
     }
 
     async updateOtp(email: string, otp: string) {
         await OtpModel.findOneAndUpdate({ email }, { $set: { otp: otp } }, { upsert: true })
+    }
+
+
+    async saveResetPasswordOtp(otpDetails: ResetPasswordOtpInterface) {
+        const newdocument = await new ResetPasswordOtpModal(otpDetails)
+        return await newdocument.save()
+    }
+
+    async getResetPasswordOtp(email: string): Promise<any> {
+        const UserOtp = await ResetPasswordOtpModal.findOne({ email: email })
+        return UserOtp
+
+    }
+
+    async RemoveResetPasswordOtpFromDb(email: string) {
+        return await ResetPasswordOtpModal.findOneAndDelete({ email: email })
     }
 
 }

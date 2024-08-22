@@ -33,9 +33,9 @@ const TeamMemberSchema: Schema = new Schema({
         required: true
     },
     permissions: {
-        dbDesign: { type: Number, enum: [accessLevel.view, accessLevel.edit], default: accessLevel.view },
-        modules: { type: Number, enum: [accessLevel.view, accessLevel.edit], default: accessLevel.view },
-        board: { type: Number, enum: [accessLevel.view, accessLevel.edit], default: accessLevel.view }
+        dbDesign: { type: Number, enum: [accessLevel.view, accessLevel.edit], default: accessLevel.edit },
+        modules: { type: Number, enum: [accessLevel.view, accessLevel.edit], default: accessLevel.edit },
+        board: { type: Number, enum: [accessLevel.view, accessLevel.edit], default: accessLevel.edit }
     },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }

@@ -21,4 +21,13 @@ export default class ProjectLeadRepository implements IprojectLeadRepository {
         return projectLeadData
     }
 
+    async updatePasswordByEmail(email: string, password: string): Promise<ProjectLead | null> {
+        const updatedLead = await ProjectLeadModel.findOneAndUpdate(
+            { email: email },
+            { $set: { password: password } },
+            { new: true }
+        );
+        return updatedLead;
+    }
+
 }

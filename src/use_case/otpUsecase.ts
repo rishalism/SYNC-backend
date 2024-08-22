@@ -43,4 +43,25 @@ export default class OtpUseCase {
     }
 
 
+    async SaveResetPasswordOtp(email: string, otp: string) {
+        const hashedotp = await this.encrypt.hashpassord(otp)
+        return await this.otpRepo.saveResetPasswordOtp({ email, otp: hashedotp })
+    }
+
+    async RestPassowrdcompareOtp(email: string, otp: string): Promise<any> {
+        const otpDAta = await this.otpRepo.getResetPasswordOtp(email);
+        if (!otpDAta) {
+            return false
+        }
+        const isvalid = await this.encrypt.compare(otp, otpDAta?.otp)
+        if (isvalid) {
+            return otpDAta
+        } else {
+            return null
+        }
+    }
+    async RemoveRestPassowrdOtp(email: string) {
+        return await this.otpRepo.RemoveResetPasswordOtpFromDb(email)
+    }
+
 }

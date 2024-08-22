@@ -21,5 +21,14 @@ export default class TeamMemberRepository implements IteamMember {
         return await memberData.save()
     }
 
- 
+
+    async UpdatePasswordByEmail(email: string, password: string) {
+        return await TeamMemberModel.findOneAndUpdate(
+            { email: email },
+            { $set: { password: password } },
+            { new: true }
+        );
+    }
+
+
 }

@@ -114,4 +114,38 @@ The Sync Team`,
     }
 
 
+
+    sendforgotPaswordMail(emailID: string, otp: string, role: string) {
+
+        const subject = "SYNC Password Reset Request";
+        const email = {
+            body: {
+                name: emailID,
+                intro: "We received a request to reset your password for your SYNC account.",
+                instructions: "If you did not request a password reset, please ignore this email. Otherwise, you can reset your password using the link below.",
+                action: {
+                    instructions: `Hello ${emailID},
+        
+        You requested to reset your password for Sync. Your One-Time Password (OTP) for resetting your password is: ${otp}
+        
+        Please enter this OTP to reset your password. This OTP will expire in ${process.env.OTP_TIMER} minutes.
+        
+        If you did not request this OTP, you can safely ignore this email.
+        
+        Thank you,
+        The Sync Team`,
+                    button: {
+                        color: "#000000",
+                        text: "Reset Password",
+                        link: `${process.env.CORS_URL}/login/${role}?otp=${encodeURIComponent(otp)}&email=${encodeURIComponent(emailID)}` // Ensure this is a valid link
+                    }
+                },
+                outro: "Thank you for using SYNC!",
+            }
+        };
+
+        const content = this.generateMailTemplate(email);
+        this.sendEmail(emailID, subject, content);
+
+    }
 }

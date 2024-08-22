@@ -31,7 +31,9 @@ route.post('/login', (req, res, next) => teammembercontroller.Login(req, res, ne
 route.post('/auth/google/login', (req, res, next) => teammembercontroller.googleSignin(req, res, next))
 route.post('/auth/google/signup', (req, res, next) => teammembercontroller.googleSignup(req, res, next))
 route.post('/accept-invitation', (req, res, next) => teammembercontroller.acceptInvitation(req, res, next))
-
+route.post('/forgot-password', (req, res, next) => teammembercontroller.forgotPassword(req, res, next))
+route.post('/forgot-password/otp', (req, res, next) => teammembercontroller.SendResetPasswordOtp(req, res, next))
+route.post('/forgot-password/reset-password', (req, res, next) => teammembercontroller.ResetPassword(req, res, next))
 
 
 

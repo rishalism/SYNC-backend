@@ -46,7 +46,9 @@ route.post('/login', (req, res, next) => projectleadcontroller.Login(req, res, n
 route.post('/auth/google-signin', (req, res, next) => projectleadcontroller.googleSignin(req, res, next))
 route.post('/auth/google-signup', (req, res, next) => projectleadcontroller.googleSignup(req, res, next))
 route.post('/invite-member', projectLeadAuth, (req, res, next) => projectleadcontroller.inviteMember(req, res, next))
-
+route.post('/forgot-password', (req, res, next) => projectleadcontroller.forgotPassword(req, res, next))
+route.post('/forgot-password/otp', (req, res, next) => projectleadcontroller.verifyResetPassworOTP(req, res, next))
+route.post('/forgot/password/reset', (req, res, next) => projectleadcontroller.ResetPassword(req, res, next))
 
 
 

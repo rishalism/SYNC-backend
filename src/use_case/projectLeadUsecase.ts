@@ -36,4 +36,11 @@ export default class ProjectLeadUseCase {
         return await this.projectLeadRepo.projectDetailInfo(email)
     }
 
+
+    async UpdatePassword(email: string, password: string) {
+        const hashedPassword = await this.encrypt.hashpassord(password)
+        return await this.projectLeadRepo.updatePasswordByEmail(email, hashedPassword)
+    }
+
+
 }

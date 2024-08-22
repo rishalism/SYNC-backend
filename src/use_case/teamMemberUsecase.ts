@@ -32,7 +32,10 @@ export default class TeamMemberUsecase {
         }
     }
 
-
+    async UpdatePassword(email: string, password: string) {
+        const hashedPassword = await this.encrypt.hashpassord(password)
+        return await this.teammemberRepo.UpdatePasswordByEmail(email, hashedPassword)
+    }
 
 
 }

@@ -13,6 +13,8 @@ import ProjectRoutes from '../router/ProjectsRoutes';
 import ApiToolRoutes from '../router/ApiToolRoutes';
 import CardRoutes from '../router/CardRouter'
 import NotePadRoutes from '../router/NotePadRouter'
+import socketServer from './socket';
+import chatRoutes from '../router/ChatRouter'
 
 dotenv.config()
 export const app = express()
@@ -42,6 +44,7 @@ const sessionOptions: SessionOptions = {
 
 app.use(session(sessionOptions))
 
+socketServer(httpserver)
 
 
 app.use("/api/Project-Lead", projectLeadRoute)
@@ -51,5 +54,6 @@ app.use('/api/v1/projects', ProjectRoutes)
 app.use('/api/v2/api-testing', ApiToolRoutes)
 app.use('/api/v3/cards', CardRoutes)
 app.use('/api/notePad', NotePadRoutes)
+app.use('/api/chats', chatRoutes)
 app.use(errorHandleMiddleware)
 

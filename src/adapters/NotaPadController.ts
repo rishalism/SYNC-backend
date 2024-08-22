@@ -1,5 +1,6 @@
 import { NotePadInterface } from "../domain/NotePadInterface";
 import { httpStatus } from "../infrasctructure/constants/httpStatus";
+import Gemini from "../infrasctructure/services/gemini";
 import { Next, Req, Res } from "../infrasctructure/types/expressTypes";
 import NotePadUsecase from "../use_case/NotePadUsecase";
 
@@ -9,7 +10,8 @@ import NotePadUsecase from "../use_case/NotePadUsecase";
 export default class NotePadController {
 
     constructor(
-        private notepadusecase: NotePadUsecase
+        private notepadusecase: NotePadUsecase,
+        private gemini: Gemini
     ) { }
 
 
@@ -68,7 +70,7 @@ export default class NotePadController {
 
     async DeleteNote(req: Req, res: Res, next: Next) {
         try {
-            const {id} = req.body
+            const { id } = req.body
             // delete the note 
             const isDeleted = await this.notepadusecase.DeleteNote(id)
             if (isDeleted) {
@@ -77,6 +79,23 @@ export default class NotePadController {
         } catch (error) {
             next(error)
 
+        }
+    }
+
+
+    async AskAi(req: Req, res: Res, next: Next) {
+        try {
+            const { prompt } = req.body
+            const result =  await this.gemini.GenerateText(prompt)
+            if (result) {
+                console.log(prompt);
+                console.log(result);
+                res.status(httpStatus.OK).json(result)
+            } else {
+                res.status(httpStatus.EXPECTATION_FAILED).json('sorry we are facing heavy traffic . please wait !')
+            }
+        } catch (error) {
+            next(error)
         }
     }
 

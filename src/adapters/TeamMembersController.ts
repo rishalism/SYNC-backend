@@ -301,9 +301,73 @@ export default class TeamMemberController {
         } catch (error) {
             next(error)
         }
-
     }
 
+
+
+    async forgotPassword(req: Req, res: Res, next: Next) {
+        try {
+            const { email, role } = req.body
+            /// check if email exist 
+
+            const isEmailExist = await this.teammemberUsecase.checkIfEmailExist(email)
+            if (isEmailExist) {
+
+                const otp = await this.generateOtp.generateOtp()
+                await this.sendmails.sendforgotPaswordMail(email, otp, role)
+                /// save otp in database 
+                const saveOtp = await this.otpusecase.SaveResetPasswordOtp(email, otp)
+                if (saveOtp) {
+                    res.status(httpStatus.OK).json('OTP has been sented ')
+                } else {
+                    res.status(httpStatus.CONFLICT).json('failed to sent OTP to your email , please double check your Email')
+                }
+
+            } else {
+                res.status(httpStatus.CONFLICT).json("We couldn’t find an account with that email address. Please create a new account or try again with a different email.")
+            }
+        } catch (error) {
+            next(error)
+
+        }
+    }
+
+
+    async SendResetPasswordOtp(req: Req, res: Res, next: Next) {
+        try {
+            const { otp, email } = req.body
+            // check if otp is correct
+            const isOtpMatches = await this.otpusecase.RestPassowrdcompareOtp(email, otp)
+            console.log(isOtpMatches);
+            if (isOtpMatches) {
+                res.status(httpStatus.OK).json('otp is correct')
+                await this.otpusecase.RemoveRestPassowrdOtp(email)
+            } else {
+                res.status(httpStatus.CONFLICT).json('invalid otp ')
+            }
+        } catch (error) {
+            next(error)
+
+        }
+    }
+
+
+
+    async ResetPassword(req: Req, res: Res, next: Next) {
+        try {
+            const { email, password } = req.body;
+            // update the password
+            const isPasswordUpdated = await this.teammemberUsecase.UpdatePassword(email, password)
+            if (isPasswordUpdated) {
+                res.status(httpStatus.ACCEPTED).json('password is changed')
+            } else {
+                res.status(httpStatus.CONFLICT).json('failed to Reset password')
+            }
+        } catch (error) {
+            next(error)
+
+        }
+    }
 
 
 }
