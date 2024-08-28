@@ -65,11 +65,26 @@ export default class ProjectController {
 
 
 
+    async GetcurrentProject(req: Req, res: Res, next: Next) {
+        try {
+            const projectId = req.params.projectId
+            const currentProject = await this.projectusecase.getCurrentProject(projectId)
+            if (currentProject) {
+                res.status(httpStatus.OK).json(currentProject)
+            } else {
+                res.status(httpStatus.NOT_FOUND).json('did not found ')
+            }
+        } catch (error) {
+            next(error)
+
+        }
+    }
+
+
 
     async deleteProject(req: Req, res: Res, next: Next) {
         try {
             const projectId = req.params.projectId
-            console.log(projectId);
             const deleted = await this.projectusecase.DeleteProject(projectId)
             console.log(deleted);
             if (deleted) {
@@ -130,6 +145,20 @@ export default class ProjectController {
             if (removedUser) {
                 console.log(removedUser);
                 res.status(httpStatus.OK)
+            }
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+    async UpdatePermissions(req: Req, res: Res, next: Next) {
+        try {
+            const { projectId, userId, permissionType, access } = req.body
+            // update permision 
+            const UpdatePermissions = await this.projectusecase.UpdatePemissions(projectId, userId, permissionType, access)
+            if (UpdatePermissions) {
+                res.status(httpStatus.OK).json('permission updated')
             }
         } catch (error) {
             next(error)

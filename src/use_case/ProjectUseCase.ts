@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 import { Project } from "../domain/ProjectInterface";
 import projectRepository from "../infrasctructure/repository/projectRepository";
+import { accessLevel } from "../domain/TeamMemberInterface";
 
 
 
@@ -23,6 +24,10 @@ export default class ProjectUseCase {
 
     async getAllProjects(memberId: string) {
         return await this.projectrepo.getprojects(memberId)
+    }
+
+    async getCurrentProject(projectId: string) {
+        return await this.projectrepo.getCurrentProject(projectId)
     }
 
     async getALLProjectsOfTeamMember(ownerId: string) {
@@ -55,5 +60,9 @@ export default class ProjectUseCase {
         return await this.projectrepo.removeMemberFromProject(projectId, memberId)
     }
 
+
+    async UpdatePemissions(projectId: string, userId: string, permissionType: string, access: accessLevel) {
+        return await this.projectrepo.UpdateMemberPermission(projectId, userId, permissionType, access)
+    }
 
 }

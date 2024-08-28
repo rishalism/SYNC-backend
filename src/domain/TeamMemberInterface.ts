@@ -1,6 +1,6 @@
 export enum accessLevel {
-    view = 1,
-    edit = 2
+    restrict = 1,
+    allow = 2
 }
 
 
@@ -20,7 +20,7 @@ export interface TeamMember {
     isGoogle: boolean;
     permissions: {
         dbDesign: accessLevel;
-        modules: accessLevel;
+        notepad: accessLevel;
         board: accessLevel;
     };
     created_at?: Date;

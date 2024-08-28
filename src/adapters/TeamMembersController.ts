@@ -62,9 +62,8 @@ export default class TeamMemberController {
     async verifyOtpAndSaveMember(req: Req, res: Res, next: Next): Promise<void> {
 
         try {
-            const { otp, email, role, name } = req.body
+            const { otp, email, role, name, avatar } = req.body
 
-            console.log(otp, email, role, name);
 
             // check otp is correct 
             const userdata = await this.otpusecase.compareOtp(email, otp)
@@ -76,12 +75,13 @@ export default class TeamMemberController {
                     email: email,
                     userName: userdata.username,
                     password: userdata.password,
+                    avatar: avatar,
                     role: role,
                     isGoogle: false,
                     permissions: {
-                        board: accessLevel.view,
-                        modules: accessLevel.view,
-                        dbDesign: accessLevel.view
+                        board: accessLevel.allow,
+                        notepad: accessLevel.allow,
+                        dbDesign: accessLevel.allow
                     }
                 }
 
@@ -105,6 +105,7 @@ export default class TeamMemberController {
 
     async Login(req: Req, res: Res, next: Next): Promise<void> {
         try {
+
             const { email, password } = req.body
             // check if email matches //
 
@@ -171,9 +172,9 @@ export default class TeamMemberController {
             const { id: password, email: email, name: name, picture: avatar, role: role } = req.body
             const userName = name.split(" ").slice(0, 1).toString()
             const permissions = {
-                board: accessLevel.view,
-                modules: accessLevel.view,
-                dbDesign: accessLevel.view
+                board: accessLevel.allow,
+                notepad: accessLevel.allow,
+                dbDesign: accessLevel.allow
             }
             const isGoogle = true
             // check if email exist 

@@ -54,7 +54,7 @@ export default class ProjectLeadController {
 
     async verifyOtpAndSaveUser(req: Req, res: Res, next: Next): Promise<void> {
         try {
-            const { otp, email, role, name } = req.body
+            const { otp, email, role, name, avatar } = req.body
             /// cheking otp mathces //
             const userdata = await this.otpusecase.compareOtp(email, otp)
 
@@ -63,6 +63,7 @@ export default class ProjectLeadController {
                 const projectLeadDetails: ProjectLead = {
                     name: name,
                     email: email,
+                    avatar: avatar,
                     username: userdata.username,
                     password: userdata.password,
                     isGoogle: false,
@@ -196,7 +197,7 @@ export default class ProjectLeadController {
             const { id: password, email: email, name: name, picture: avatar, role: role } = req.body
             // check if email exist 
             const isUser = await this.projectleadusecase.checkEmailExist(email)
-            if (isUser.data && isUser.data.isGoogle == true) {
+            if (isUser.data) {
                 if (isUser.data._id && isUser?.data.role) {
                     // sending back jwt token as response //
                     const accesstoken = await this.jwt.generateAccesToken(isUser?.data?._id, isUser?.data?.role);

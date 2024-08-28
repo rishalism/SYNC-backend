@@ -1,6 +1,8 @@
 import { ObjectId } from "mongoose";
 import { Project } from "../../domain/ProjectInterface";
 import ProjectModel from "../databases/ProjectModal";
+import TeamMemberModel from "../databases/TeamMemberModel";
+import { accessLevel } from "../../domain/TeamMemberInterface";
 
 
 
@@ -18,6 +20,14 @@ export default class projectRepository {
             return projects
         }
     }
+
+    async getCurrentProject(projectId: string) {
+        const projects = await ProjectModel.findById(projectId).populate('projectOwner').populate('ProjectMembers')
+        if (projects) {
+            return projects
+        }
+    }
+
 
     async getTeamMemberProjects(memberId: string) {
         const projects = await ProjectModel.find({ ProjectMembers: memberId, isDeleted: false }).populate('projectOwner').populate('ProjectMembers')
@@ -74,6 +84,17 @@ export default class projectRepository {
     }
 
 
-
+    async UpdateMemberPermission(projectId: string, userId: string, permissionType: string, access: accessLevel) {
+        const updatedPermission = await TeamMemberModel.findByIdAndUpdate(
+            userId,
+            {
+                $set: {
+                    [`permissions.${permissionType}`]: access
+                }
+            },
+            { new: true } // This option returns the modified document
+        );
+        return updatedPermission;
+    }
 
 }

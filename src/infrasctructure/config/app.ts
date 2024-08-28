@@ -15,6 +15,7 @@ import CardRoutes from '../router/CardRouter'
 import NotePadRoutes from '../router/NotePadRouter'
 import socketServer from './socket';
 import chatRoutes from '../router/ChatRouter'
+import notificationRoutes from '../router/NotificationRoutes'
 
 dotenv.config()
 export const app = express()
@@ -55,5 +56,6 @@ app.use('/api/v2/api-testing', ApiToolRoutes)
 app.use('/api/v3/cards', CardRoutes)
 app.use('/api/notePad', NotePadRoutes)
 app.use('/api/chats', chatRoutes)
+app.use('/api/notifications', notificationRoutes)
 app.use(errorHandleMiddleware)
 

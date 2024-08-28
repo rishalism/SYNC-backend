@@ -19,7 +19,6 @@ export default class CardController {
             // save in to databse 
             const saved = await this.cardusecase.saveCardinDatabase({ id, column, projectId, title })
             if (saved) {
-                console.log(saved);
                 res.status(httpStatus.OK).json('card has been saves in Db')
             }
         } catch (error) {
@@ -61,8 +60,6 @@ export default class CardController {
         try {
             const { inputValue, assignedMemberIds, id } = req.body
             // update by id and update task
-            console.log(req.body);
-
             const updatedCard = await this.cardusecase.assigntask(id, inputValue, assignedMemberIds)
             if (updatedCard) {
                 res.status(httpStatus.OK).json()
