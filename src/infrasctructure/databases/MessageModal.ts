@@ -1,4 +1,4 @@
-import mongoose, { Model, Schema } from "mongoose";
+import mongoose, { Document, Model, Schema } from "mongoose";
 import { IMessage } from "../../domain/ChatInterface";
 
 export const MessageSchema: Schema = new Schema({
