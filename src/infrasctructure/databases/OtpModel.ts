@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 import { Otp } from "../../domain/OtpInterface";
 import { OTP_TIMER } from "../constants/jwt";
 
