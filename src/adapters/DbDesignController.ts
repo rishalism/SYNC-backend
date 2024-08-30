@@ -35,9 +35,7 @@ export default class DbdesignController {
             const dbDesignData = await this.dbdesignusecase.getdbdesignByProjectId(projectId)
             if (dbDesignData) {
                 res.status(httpStatus.OK).json(dbDesignData)
-            } else {
-                res.status(httpStatus.CONFLICT).json('failed to restore from database.. please try again later')
-            }
+            } 
         } catch (error) {
             next(error)
         }
