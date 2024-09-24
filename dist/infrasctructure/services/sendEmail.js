@@ -1,0 +1,137 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const nodemailer_1 = __importDefault(require("nodemailer"));
+const mailgen_1 = __importDefault(require("mailgen"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+class sendEmail {
+    constructor() {
+        this.transporter = nodemailer_1.default.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+        });
+    }
+    sendEmail(emailId, subject, content) {
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: emailId,
+            subject,
+            html: content,
+        };
+        this.transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+                console.log("Failed to send email. Error:", err);
+            }
+            else {
+                console.log(`Email sent successfully to ${emailId}. Response: ${info.response}`);
+            }
+        });
+    }
+    generateMailTemplate(email) {
+        const mailGenerator = new mailgen_1.default({
+            theme: 'default',
+            product: {
+                name: 'SYNC',
+                link: process.env.CORS_URL || "",
+            }
+        });
+        return mailGenerator.generate(email);
+    }
+    sendOtpMail(emailID, name, otp) {
+        const subject = "SYNC Account Verification";
+        const email = {
+            body: {
+                name: name,
+                intro: "Welcome to SYNC !!",
+                instructions: "Please click the button below to verify your email address.",
+                action: {
+                    instructions: `Hello ${name},
+
+Your One-Time Password (OTP) for Sync is: ${otp}
+
+Please enter this OTP to complete your verification process. This OTP will expire in ${process.env.OTP_TIMER} minutes.
+
+If you did not request this OTP, please ignore this email.
+
+Thank you,
+The Sync Team`,
+                    button: {
+                        color: "#000000",
+                        text: "Verify Now",
+                        link: `${process.env.CORS_URL}/verify-otp?otp=${otp}` // Ideally, this should be a valid link
+                    }
+                },
+                outro: "Thank you for using SYNC!!",
+            }
+        };
+        const content = this.generateMailTemplate(email);
+        this.sendEmail(emailID, subject, content);
+    }
+    sendInvitationMail(emailId, projectOwner, url) {
+        const subject = "You're Invited to a Project on SYNC!";
+        const email = {
+            body: {
+                name: emailId,
+                intro: `You've been invited to join the project`,
+                instructions: "Click the button below to accept the invitation and get started.",
+                action: {
+                    instructions: `Hey ${emailId},
+        
+        You've been invited to join the project  by the project owner  ${projectOwner}.
+        
+        We're excited to have you on board! Click the button below to join the project and start collaborating.
+        
+        If this wasn't expected, you can ignore this email.
+        
+        Thanks,
+        The Sync Team`,
+                    button: {
+                        color: "#007BFF", // A friendly, inviting color
+                        text: "Join Project",
+                        link: url // Ensure this is a valid link
+                    }
+                },
+                outro: "Looking forward to working with you!",
+            }
+        };
+        const content = this.generateMailTemplate(email);
+        this.sendEmail(emailId, subject, content);
+    }
+    sendforgotPaswordMail(emailID, otp, role) {
+        const subject = "SYNC Password Reset Request";
+        const email = {
+            body: {
+                name: emailID,
+                intro: "We received a request to reset your password for your SYNC account.",
+                instructions: "If you did not request a password reset, please ignore this email. Otherwise, you can reset your password using the link below.",
+                action: {
+                    instructions: `Hello ${emailID},
+        
+        You requested to reset your password for Sync. Your One-Time Password (OTP) for resetting your password is: ${otp}
+        
+        Please enter this OTP to reset your password. This OTP will expire in ${process.env.OTP_TIMER} minutes.
+        
+        If you did not request this OTP, you can safely ignore this email.
+        
+        Thank you,
+        The Sync Team`,
+                    button: {
+                        color: "#000000",
+                        text: "Reset Password",
+                        link: `${process.env.CORS_URL}/login/${role}?otp=${encodeURIComponent(otp)}&email=${encodeURIComponent(emailID)}` // Ensure this is a valid link
+                    }
+                },
+                outro: "Thank you for using SYNC!",
+            }
+        };
+        const content = this.generateMailTemplate(email);
+        this.sendEmail(emailID, subject, content);
+    }
+}
+exports.default = sendEmail;

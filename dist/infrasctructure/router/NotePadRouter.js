@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const NotaPadController_1 = __importDefault(require("../../adapters/NotaPadController"));
+const NotePadUsecase_1 = __importDefault(require("../../use_case/NotePadUsecase"));
+const NotePadRepository_1 = __importDefault(require("../repository/NotePadRepository"));
+const CommonAuth_1 = __importDefault(require("../middlewares/CommonAuth"));
+const gemini_1 = __importDefault(require("../services/gemini"));
+const route = (0, express_1.default)();
+const notepadrepo = new NotePadRepository_1.default();
+const notepadusecase = new NotePadUsecase_1.default(notepadrepo);
+const gemini = new gemini_1.default();
+const notepadcontroller = new NotaPadController_1.default(notepadusecase, gemini);
+route.post('/note/create', CommonAuth_1.default, (req, res, next) => notepadcontroller.CreateNewNote(req, res, next));
+route.get('/note/get/:projectId', CommonAuth_1.default, (req, res, next) => notepadcontroller.GetNotes(req, res, next));
+route.post('/note/update', CommonAuth_1.default, (req, res, next) => notepadcontroller.UpdateNote(req, res, next));
+route.post('/note/delete', CommonAuth_1.default, (req, res, next) => notepadcontroller.DeleteNote(req, res, next));
+route.post('/note/ai', (req, res, next) => notepadcontroller.AskAi(req, res, next));
+exports.default = route;

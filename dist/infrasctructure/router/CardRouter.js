@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const CardController_1 = __importDefault(require("../../adapters/CardController"));
+const CardRepository_1 = __importDefault(require("../repository/CardRepository"));
+const CardUsecase_1 = __importDefault(require("../../use_case/CardUsecase"));
+const CommonAuth_1 = __importDefault(require("../middlewares/CommonAuth"));
+const route = (0, express_1.default)();
+const cardrepo = new CardRepository_1.default();
+const cardusecase = new CardUsecase_1.default(cardrepo);
+const cardcontroller = new CardController_1.default(cardusecase);
+route.post('/card/create', CommonAuth_1.default, (req, res, next) => cardcontroller.AddCard(req, res, next));
+route.get('/card/get/:projectId', CommonAuth_1.default, (req, res, next) => cardcontroller.GetCards(req, res, next));
+route.patch('/card/update', CommonAuth_1.default, (req, res, next) => cardcontroller.Updatecard(req, res, next));
+route.patch('/card/add-task', CommonAuth_1.default, (req, res, next) => cardcontroller.AddtaskAndAssignMembers(req, res, next));
+route.get('/card/getone/:id', CommonAuth_1.default, (req, res, next) => cardcontroller.GetCardById(req, res, next));
+route.put('/card/delete', CommonAuth_1.default, (req, res, next) => cardcontroller.DeleteCard(req, res, next));
+route.put('/task/delete', CommonAuth_1.default, (req, res, next) => cardcontroller.TaskDelete(req, res, next));
+exports.default = route;

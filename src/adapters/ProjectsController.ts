@@ -101,15 +101,10 @@ export default class ProjectController {
             const { projectName, description, projectOwner } = req.body
             const projectId = req.params.projectId
             const isDeleted = false
-            const isProjectExist = await this.projectusecase.checkIsTheProjectExist(projectOwner, projectName)
-            if (isProjectExist) {
-                res.status(httpStatus.CONFLICT).json("A project with this name already exists.")
 
-            } else {
-                const editProject = await this.projectusecase.editProject(projectId, { projectName, description, projectOwner, isDeleted })
-                if (editProject) {
-                    res.status(httpStatus.OK).json('project has been edited')
-                }
+            const editProject = await this.projectusecase.editProject(projectId, { projectName, description, projectOwner, isDeleted })
+            if (editProject) {
+                res.status(httpStatus.OK).json('project has been edited')
             }
         } catch (error) {
             next(error)

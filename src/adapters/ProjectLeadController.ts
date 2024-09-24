@@ -91,6 +91,7 @@ export default class ProjectLeadController {
         try {
             const { email, password } = req.body
             // check email matches //
+            console.log(req.body);
             const ProjectLeadData = await this.projectleadusecase.checkEmailExist(email)
             if (ProjectLeadData.data?.password) {
                 // check password matches //

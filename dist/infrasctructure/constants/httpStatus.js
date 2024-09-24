@@ -1,0 +1,74 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.httpStatus = void 0;
+var httpStatus;
+(function (httpStatus) {
+    // Informational responses (100–199)
+    httpStatus[httpStatus["CONTINUE"] = 100] = "CONTINUE";
+    httpStatus[httpStatus["SWITCHING_PROTOCOLS"] = 101] = "SWITCHING_PROTOCOLS";
+    httpStatus[httpStatus["PROCESSING"] = 102] = "PROCESSING";
+    httpStatus[httpStatus["EARLY_HINTS"] = 103] = "EARLY_HINTS";
+    // Successful responses (200–299)
+    httpStatus[httpStatus["OK"] = 200] = "OK";
+    httpStatus[httpStatus["CREATED"] = 201] = "CREATED";
+    httpStatus[httpStatus["ACCEPTED"] = 202] = "ACCEPTED";
+    httpStatus[httpStatus["NON_AUTHORITATIVE_INFORMATION"] = 203] = "NON_AUTHORITATIVE_INFORMATION";
+    httpStatus[httpStatus["NO_CONTENT"] = 204] = "NO_CONTENT";
+    httpStatus[httpStatus["RESET_CONTENT"] = 205] = "RESET_CONTENT";
+    httpStatus[httpStatus["PARTIAL_CONTENT"] = 206] = "PARTIAL_CONTENT";
+    httpStatus[httpStatus["MULTI_STATUS"] = 207] = "MULTI_STATUS";
+    httpStatus[httpStatus["ALREADY_REPORTED"] = 208] = "ALREADY_REPORTED";
+    httpStatus[httpStatus["IM_USED"] = 226] = "IM_USED";
+    // Redirection messages (300–399)
+    httpStatus[httpStatus["MULTIPLE_CHOICES"] = 300] = "MULTIPLE_CHOICES";
+    httpStatus[httpStatus["MOVED_PERMANENTLY"] = 301] = "MOVED_PERMANENTLY";
+    httpStatus[httpStatus["FOUND"] = 302] = "FOUND";
+    httpStatus[httpStatus["SEE_OTHER"] = 303] = "SEE_OTHER";
+    httpStatus[httpStatus["NOT_MODIFIED"] = 304] = "NOT_MODIFIED";
+    httpStatus[httpStatus["USE_PROXY"] = 305] = "USE_PROXY";
+    httpStatus[httpStatus["UNUSED"] = 306] = "UNUSED";
+    httpStatus[httpStatus["TEMPORARY_REDIRECT"] = 307] = "TEMPORARY_REDIRECT";
+    httpStatus[httpStatus["PERMANENT_REDIRECT"] = 308] = "PERMANENT_REDIRECT";
+    // Client error responses (400–499)
+    httpStatus[httpStatus["BAD_REQUEST"] = 400] = "BAD_REQUEST";
+    httpStatus[httpStatus["UNAUTHORIZED"] = 401] = "UNAUTHORIZED";
+    httpStatus[httpStatus["PAYMENT_REQUIRED"] = 402] = "PAYMENT_REQUIRED";
+    httpStatus[httpStatus["FORBIDDEN"] = 403] = "FORBIDDEN";
+    httpStatus[httpStatus["NOT_FOUND"] = 404] = "NOT_FOUND";
+    httpStatus[httpStatus["METHOD_NOT_ALLOWED"] = 405] = "METHOD_NOT_ALLOWED";
+    httpStatus[httpStatus["NOT_ACCEPTABLE"] = 406] = "NOT_ACCEPTABLE";
+    httpStatus[httpStatus["PROXY_AUTHENTICATION_REQUIRED"] = 407] = "PROXY_AUTHENTICATION_REQUIRED";
+    httpStatus[httpStatus["REQUEST_TIMEOUT"] = 408] = "REQUEST_TIMEOUT";
+    httpStatus[httpStatus["CONFLICT"] = 409] = "CONFLICT";
+    httpStatus[httpStatus["GONE"] = 410] = "GONE";
+    httpStatus[httpStatus["LENGTH_REQUIRED"] = 411] = "LENGTH_REQUIRED";
+    httpStatus[httpStatus["PRECONDITION_FAILED"] = 412] = "PRECONDITION_FAILED";
+    httpStatus[httpStatus["PAYLOAD_TOO_LARGE"] = 413] = "PAYLOAD_TOO_LARGE";
+    httpStatus[httpStatus["URI_TOO_LONG"] = 414] = "URI_TOO_LONG";
+    httpStatus[httpStatus["UNSUPPORTED_MEDIA_TYPE"] = 415] = "UNSUPPORTED_MEDIA_TYPE";
+    httpStatus[httpStatus["RANGE_NOT_SATISFIABLE"] = 416] = "RANGE_NOT_SATISFIABLE";
+    httpStatus[httpStatus["EXPECTATION_FAILED"] = 417] = "EXPECTATION_FAILED";
+    httpStatus[httpStatus["IM_A_TEAPOT"] = 418] = "IM_A_TEAPOT";
+    httpStatus[httpStatus["MISDIRECTED_REQUEST"] = 421] = "MISDIRECTED_REQUEST";
+    httpStatus[httpStatus["UNPROCESSABLE_ENTITY"] = 422] = "UNPROCESSABLE_ENTITY";
+    httpStatus[httpStatus["LOCKED"] = 423] = "LOCKED";
+    httpStatus[httpStatus["FAILED_DEPENDENCY"] = 424] = "FAILED_DEPENDENCY";
+    httpStatus[httpStatus["TOO_EARLY"] = 425] = "TOO_EARLY";
+    httpStatus[httpStatus["UPGRADE_REQUIRED"] = 426] = "UPGRADE_REQUIRED";
+    httpStatus[httpStatus["PRECONDITION_REQUIRED"] = 428] = "PRECONDITION_REQUIRED";
+    httpStatus[httpStatus["TOO_MANY_REQUESTS"] = 429] = "TOO_MANY_REQUESTS";
+    httpStatus[httpStatus["REQUEST_HEADER_FIELDS_TOO_LARGE"] = 431] = "REQUEST_HEADER_FIELDS_TOO_LARGE";
+    httpStatus[httpStatus["UNAVAILABLE_FOR_LEGAL_REASONS"] = 451] = "UNAVAILABLE_FOR_LEGAL_REASONS";
+    // Server error responses (500–599)
+    httpStatus[httpStatus["INTERNAL_SERVER_ERROR"] = 500] = "INTERNAL_SERVER_ERROR";
+    httpStatus[httpStatus["NOT_IMPLEMENTED"] = 501] = "NOT_IMPLEMENTED";
+    httpStatus[httpStatus["BAD_GATEWAY"] = 502] = "BAD_GATEWAY";
+    httpStatus[httpStatus["SERVICE_UNAVAILABLE"] = 503] = "SERVICE_UNAVAILABLE";
+    httpStatus[httpStatus["GATEWAY_TIMEOUT"] = 504] = "GATEWAY_TIMEOUT";
+    httpStatus[httpStatus["HTTP_VERSION_NOT_SUPPORTED"] = 505] = "HTTP_VERSION_NOT_SUPPORTED";
+    httpStatus[httpStatus["VARIANT_ALSO_NEGOTIATES"] = 506] = "VARIANT_ALSO_NEGOTIATES";
+    httpStatus[httpStatus["INSUFFICIENT_STORAGE"] = 507] = "INSUFFICIENT_STORAGE";
+    httpStatus[httpStatus["LOOP_DETECTED"] = 508] = "LOOP_DETECTED";
+    httpStatus[httpStatus["NOT_EXTENDED"] = 510] = "NOT_EXTENDED";
+    httpStatus[httpStatus["NETWORK_AUTHENTICATION_REQUIRED"] = 511] = "NETWORK_AUTHENTICATION_REQUIRED";
+})(httpStatus || (exports.httpStatus = httpStatus = {}));
